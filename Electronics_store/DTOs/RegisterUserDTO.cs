@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using Electronics_store.Models.Base;
-using Newtonsoft.Json;
+﻿using System;
 
-namespace Electronics_store.Models
+namespace Electronics_store.DTOs
 {
-    public class User : BaseEntity
+    public class RegisterUserDTO
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        
+        public DateTime? DateCreated { get; set; }
+        
+        public DateTime? DateModified { get; set; }
     }
 }

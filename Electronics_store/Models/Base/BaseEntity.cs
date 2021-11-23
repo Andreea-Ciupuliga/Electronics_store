@@ -13,7 +13,7 @@ namespace Electronics_store.Models.Base
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? DateCreated { get; set; }
         
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] //genereaza o valoare atunci cand un rand este inserat sau updatat
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] //genereaza o valoare atunci cand un rand este inserat sau updatat
         public DateTime? DateModified { get; set; }
     }
 }

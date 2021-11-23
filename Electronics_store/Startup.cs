@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Electronics_store.Data;
 using Electronics_store.Repositories.UserRepository;
 using Electronics_store.Services;
+using Electronics_store.Services.UserService;
 using Microsoft.EntityFrameworkCore;
 
 namespace Electronics_store
@@ -24,7 +25,8 @@ namespace Electronics_store
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Electronics_store", Version = "v1" });

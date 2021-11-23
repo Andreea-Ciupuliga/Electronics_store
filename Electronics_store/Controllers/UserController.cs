@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Electronics_store.Data;
 using Electronics_store.DTOs;
 using Electronics_store.Models;
-using Electronics_store.Services;
+using Electronics_store.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Electronics_store.Controllers
@@ -20,18 +22,49 @@ namespace Electronics_store.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        //GET
+        [HttpGet("byId")]
         public IActionResult GetById(Guid Id)
         {
-            var result = _userService.GetDataByUserId(Id);
-            return Ok(result);
+            return Ok(_userService.GetUserByUserId(Id));
         }
         
+        [HttpGet("allUsers")]
+        public  IActionResult GetAllUsers() 
+        {
+            return Ok(_userService.GetAllUsers());
+        }
+        
+        
+        [HttpGet("byname")]
+        public IActionResult GetAllUsersByName(string name)
+        {
+            return Ok(_userService.GetAllUsersByName(name));
+        }
+        
+        
+        //POST
         [HttpPost("create")]
-        public IActionResult Create(UserDTO user)
+        public IActionResult Create(RegisterUserDTO user)
         {
             _userService.CreateUser(user);
-            //ar trebui sa folosim context ca sa adaugam userul in baza de date
+            return Ok();
+        }
+        
+        //PUT
+        [HttpPut("updateUser")]
+        public IActionResult Update(RegisterUserDTO user, Guid id)
+        {
+            _userService.UpdateUser(user, id);
+            return Ok();
+        }
+        
+        
+        //DELETE
+        [HttpDelete]
+        public IActionResult DeleteById(Guid Id)
+        {
+            _userService.DeleteUserById(Id);
             return Ok();
         }
     }

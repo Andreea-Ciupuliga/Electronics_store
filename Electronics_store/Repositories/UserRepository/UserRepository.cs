@@ -7,6 +7,7 @@ using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.GenericRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Electronics_store.Repositories.UserRepository
 {
@@ -19,10 +20,32 @@ namespace Electronics_store.Repositories.UserRepository
             _context = context;
         }
 
-        public User GetById(Guid id)
+        // public User GetById(Guid id)
+        // {
+        //     return _table.FirstOrDefault(u => u.Id.Equals(id));
+        // }
+
+        public IQueryable<RespondUserDTO> GetAllUsers()
         {
-            return _table.FirstOrDefault(u => u.Id.Equals(id));
+            return _table.Select(x => new RespondUserDTO
+            {
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email,
+                Username = x.Username,
+            });
         }
 
+        public IQueryable<RespondUserDTO> GetAllUsersByName(string name)
+        {
+            return _table.Where(x => x.FirstName.Equals(name) || x.LastName.Equals(name))
+                        .Select(x => new RespondUserDTO
+                        {
+                            FirstName = x.FirstName,
+                            LastName = x.LastName,
+                            Email = x.Email,
+                            Username = x.Username,
+                        });
+        }
     }
 }

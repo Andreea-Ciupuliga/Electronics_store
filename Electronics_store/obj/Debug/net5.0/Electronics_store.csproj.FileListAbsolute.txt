@@ -57,3 +57,6 @@ D:\Proiecte DAW\Electronics_store\Electronics_store\obj\Debug\net5.0\Electronics
 D:\Proiecte DAW\Electronics_store\Electronics_store\obj\Debug\net5.0\Electronics_store.genruntimeconfig.cache
 D:\Proiecte DAW\Electronics_store\Electronics_store\bin\Debug\net5.0\Humanizer.dll
 D:\Proiecte DAW\Electronics_store\Electronics_store\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\Proiecte DAW\Electronics_store\Electronics_store\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\Proiecte DAW\Electronics_store\Electronics_store\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\Proiecte DAW\Electronics_store\Electronics_store\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
