@@ -13,10 +13,5 @@ namespace Electronics_store.Repositories.CategoryRepository
         {
             _context = context;
         }
-
-        public Category GetById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
