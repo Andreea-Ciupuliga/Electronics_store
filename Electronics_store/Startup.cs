@@ -5,9 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Electronics_store.Data;
+using Electronics_store.Repositories.CategoryRepository;
 using Electronics_store.Repositories.UserRepository;
 using Electronics_store.Services;
+using Electronics_store.Services.CategoryService;
 using Electronics_store.Services.UserService;
+//using Electronics_store.Utilities;
+//using Electronics_store.Utilities.JWTUtils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Electronics_store
@@ -31,10 +35,13 @@ namespace Electronics_store
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Electronics_store", Version = "v1" });
             });
+            
+            
             //repositories
             
             //se creeaza de fiecare data cand se face un request
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
             
             //se creeaza cand se face primul request
             //services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
@@ -46,8 +53,12 @@ namespace Electronics_store
 
             //services
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddDbContext<ElectronicsStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            //services.AddScoped<IJWTUtils, JWTUtils>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +75,8 @@ namespace Electronics_store
 
             app.UseRouting();
 
+           // app.UseMiddleware<JWTMiddleware>();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
