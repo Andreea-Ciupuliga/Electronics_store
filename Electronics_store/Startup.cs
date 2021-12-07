@@ -6,9 +6,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Electronics_store.Data;
 using Electronics_store.Repositories.CategoryRepository;
+using Electronics_store.Repositories.ProductRepository;
 using Electronics_store.Repositories.UserRepository;
 using Electronics_store.Services;
 using Electronics_store.Services.CategoryService;
+using Electronics_store.Services.ProductService;
 using Electronics_store.Services.UserService;
 //using Electronics_store.Utilities;
 //using Electronics_store.Utilities.JWTUtils;
@@ -42,6 +44,7 @@ namespace Electronics_store
             //se creeaza de fiecare data cand se face un request
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
             
             //se creeaza cand se face primul request
             //services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
@@ -54,6 +57,7 @@ namespace Electronics_store
             //services
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IProductService, ProductService>();
             services.AddDbContext<ElectronicsStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
