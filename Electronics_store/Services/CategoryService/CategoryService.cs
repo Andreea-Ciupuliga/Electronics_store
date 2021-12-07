@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Electronics_store.Models;
 using Electronics_store.Repositories.CategoryRepository;
@@ -15,9 +16,9 @@ namespace Electronics_store.Services.CategoryService
             _categoryRepository = categoryRepository;
         }
 
-        public Task<List<Category>> GetAllCategories()
+        public IQueryable<Category> GetAllCategories()
         {
-            Task<List<Category>> categoriesList = _categoryRepository.GetAll();
+            IQueryable<Category> categoriesList = _categoryRepository.GetAllCategories();
             return categoriesList;
         }
 

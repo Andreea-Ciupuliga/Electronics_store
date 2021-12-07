@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Electronics_store.Models;
 using Electronics_store.Repositories.ProductRepository;
@@ -14,16 +15,16 @@ namespace Electronics_store.Services.ProductService
         {
             _productRepository = productRepository;
         }
-        
-        public Task<List<Product>> GetAllProducts()
+
+        public IQueryable<Product>  GetAllProducts()
         {
-            Task<List<Product>> productsList =  _productRepository.GetAll();
+            IQueryable<Product>  productsList = _productRepository.GetAllProducts();
             return productsList;
         }
 
         public Product GetProductByProductId(Guid Id)
         {
-            Product product =  _productRepository.FindById(Id);
+            Product product = _productRepository.FindById(Id);
             return product;
         }
 
@@ -45,7 +46,7 @@ namespace Electronics_store.Services.ProductService
 
         public void DeleteProductById(Guid id)
         {
-            Product product =  _productRepository.FindById(id);
+            Product product = _productRepository.FindById(id);
             _productRepository.Delete(product);
             _productRepository.Save();
         }

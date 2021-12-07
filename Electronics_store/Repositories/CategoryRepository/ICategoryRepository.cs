@@ -7,6 +7,6 @@ namespace Electronics_store.Repositories.CategoryRepository
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-        
+        IQueryable<Category> GetAllCategories();
     }
 }
