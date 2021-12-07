@@ -34,16 +34,8 @@ namespace Electronics_store.Data
             builder.Entity<User>() //aici zic ca User are mai multe Orders
                 .HasMany(u => u.Orders)
                 .WithOne(o => o.User);
-
-            builder.Entity<Order>() //se pastreaza ideea de mai sus dar zic invers
-                .HasOne(o => o.User)
-                .WithMany(u => u.Orders);
-
-
+            
             //Category(1)-(M)Product
-            builder.Entity<Category>() //aici zic ca Category are mai multe Product
-                .HasMany(c => c.Products)
-                .WithOne(p => p.Category);
 
             builder.Entity<Product>() //se pastreaza ideea de mai sus dar zic invers
                 .HasOne(p => p.Category)
