@@ -8,12 +8,11 @@ using Electronics_store.Data;
 using Electronics_store.Repositories.CategoryRepository;
 using Electronics_store.Repositories.ProductRepository;
 using Electronics_store.Repositories.UserRepository;
-using Electronics_store.Services;
 using Electronics_store.Services.CategoryService;
 using Electronics_store.Services.ProductService;
 using Electronics_store.Services.UserService;
-//using Electronics_store.Utilities;
-//using Electronics_store.Utilities.JWTUtils;
+using Electronics_store.Utilities;
+using Electronics_store.Utilities.JWTUtils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Electronics_store
@@ -33,6 +32,9 @@ namespace Electronics_store
 
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
+            //services.AddControllers().AddNewtonsoftJson();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Electronics_store", Version = "v1" });
@@ -60,9 +62,11 @@ namespace Electronics_store
             services.AddTransient<IProductService, ProductService>();
             services.AddDbContext<ElectronicsStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            //services.AddScoped<IJWTUtils, JWTUtils>();
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddScoped<IJWTUtils, JWTUtils>();
             services.AddScoped<IUserService, UserService>();
+            
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,7 +83,7 @@ namespace Electronics_store
 
             app.UseRouting();
 
-           // app.UseMiddleware<JWTMiddleware>();
+           app.UseMiddleware<JWTMiddleware>();
             
             app.UseAuthorization();
 
