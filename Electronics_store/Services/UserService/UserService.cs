@@ -1,62 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Electronics_store.Data;
 using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.UserRepository;
+using Electronics_store.Utilities;
+using Electronics_store.Utilities.JWTUtils;
+using Microsoft.Extensions.Options;
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace Electronics_store.Services.UserService
 {
     public class UserService : IUserService
     {
         public IUserRepository _userRepository;
+        public ElectronicsStoreContext _context;
+        private IJWTUtils _ijwtUtils;
+        private readonly AppSettings _appSettings;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository,ElectronicsStoreContext context, IJWTUtils ijwtUtils, IOptions<AppSettings> appSettings,IMapper mapper)
         {
             _userRepository = userRepository;
+            _context = context;
+           _ijwtUtils = ijwtUtils;
+           _appSettings = appSettings.Value;
+           _mapper = mapper;
         }
 
-        public RegisterUserDTO GetUserByUserId(Guid Id)
+        public UserRespondDTO GetUserByUserId(Guid Id)
         {
             User user = _userRepository.FindById(Id);
-            RegisterUserDTO userDto = new()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email
-            };
-
-            return userDto;
+            UserRespondDTO userRespondDto  = _mapper.Map<UserRespondDTO >(user);
+            return userRespondDto;
         }
-
-        public void CreateUser(RegisterUserDTO user)
+        
+        public void CreateUser(UserRegisterDTO user)
         {
-            var userToCreate = new User
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Username = user.Username,
-                Password = user.Password,
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now
-            };
+            
+            // verific ca username ul si emailul sa fie unice(sa nu se regaseasca in baza de date)
+            if(_userRepository.GetByEmail(user.Email)!=null || _userRepository.GetByUsername(user.Username)!=null)
+                throw new Exception("Email or username already exists");
+            
+            var userToCreate = _mapper.Map<User>(user);
+            userToCreate.Role = Role.User; 
+            userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash); 
+            userToCreate.DateCreated = DateTime.Now;
+            userToCreate.DateModified = DateTime.Now; 
 
+            //o alta varianta 
+            
+            // var userToCreate = new User 
+            // {
+            //     FirstName = user.FirstName,
+            //     LastName = user.LastName,
+            //     Email = user.Email,
+            //     Username = user.Username,
+            //     Role = Role.User,
+            //     PasswordHash = BCryptNet.HashPassword(user.PasswordHash),
+            //     DateCreated = DateTime.Now,
+            //     DateModified = DateTime.Now
+            // };
+            
             _userRepository.Create(userToCreate);
             _userRepository.Save();
         }
 
-        public IQueryable<RespondUserDTO> GetAllUsers()
+        public void CreateAdmin(UserRegisterDTO user)
         {
-            IQueryable<RespondUserDTO> usersList = _userRepository.GetAllUsers();
-            return usersList;
+            
+            // verific ca username ul si emailul sa fie unice(sa nu se regaseasca in baza de date)
+            if(_userRepository.GetByEmail(user.Email)!=null || _userRepository.GetByUsername(user.Username)!=null)
+                throw new Exception("Email or username already exists");
+            
+            var userToCreate = _mapper.Map<User>(user);
+            
+            userToCreate.Role = Role.Admin; 
+            userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash); 
+            userToCreate.DateCreated = DateTime.Now;
+            userToCreate.DateModified = DateTime.Now;
+            
+            _userRepository.Create(userToCreate);
+            _userRepository.Save();
+        }
+        public  List<UserRespondDTO> GetAllUsers()
+        {
+            List<User> usersList = _userRepository.GetAllUsers();
+            List<UserRespondDTO> userRespondDto  = _mapper.Map<List<UserRespondDTO>>(usersList);
+            return userRespondDto;
         }
 
-        public IQueryable<RespondUserDTO> GetAllUsersByName(string name)
+        public List<UserRespondDTO> GetAllUsersByName(string name)
         {
-            IQueryable<RespondUserDTO> usersList = _userRepository.GetAllUsersByName(name);
-            return usersList;
+            List<User> usersList = _userRepository.GetAllUsersByName(name);
+            List<UserRespondDTO> userRespondDto  = _mapper.Map<List<UserRespondDTO>>(usersList);
+            return userRespondDto;
         }
 
         public void DeleteUserById(Guid id)
@@ -66,28 +106,47 @@ namespace Electronics_store.Services.UserService
             _userRepository.Save();
         }
 
-        public void UpdateUser(RegisterUserDTO newUser, Guid id)
+        public void UpdateUser(UserRegisterDTO newUser, Guid id)
         {
+            // User userToUpdate = _userRepository.FindById(id);
+            // userToUpdate =_mapper.Map<User>(newUser);
+            // _userRepository.Save();
+            
             User user = _userRepository.FindById(id);
-
+            
             if (newUser.FirstName != null)
                 user.FirstName = newUser.FirstName;
-
+            
             if (newUser.LastName != null)
                 user.LastName = newUser.LastName;
-
+            
             if (newUser.Email != null)
                 user.Email = newUser.Email;
-
+            
             if (newUser.Username != null)
                 user.Username = newUser.Username;
-
-            if (newUser.Password != null)
-                user.Password = newUser.Password;
-
+            
+            if (newUser.PasswordHash != null)
+                user.PasswordHash = newUser.PasswordHash;
+            
             user.DateModified = DateTime.Now;
 
             _userRepository.Save();
+        }
+
+        public UserResponseTokenDTO Authentificate(UserLoginDTO model) //asta e o metoda care verifica parolele (hash-ul cu parola noastra)
+        {
+        
+            var user = _context.Users.FirstOrDefault(x => x.Username.Equals(model.Username));
+        
+            if (user == null || !BCryptNet.Verify(model.PasswordHash, user.PasswordHash))
+            {
+                return null;
+            }
+        
+            //generam jwt token
+            var jwtToken = _ijwtUtils.GenerateJWTToken(user);
+            return new UserResponseTokenDTO(user, jwtToken);
         }
     }
 }
