@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+//using AutoMapper;
 using Electronics_store.Data;
 using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Services.UserService;
+using Electronics_store.Utilities.Atttributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Electronics_store.Controllers
@@ -22,45 +22,68 @@ namespace Electronics_store.Controllers
             _context = context;
         }
 
-        //GET
+        //endpointul de autentificare trebuie sa fie accesibil tuturor
+        [HttpPost("authenticate")]
+        public IActionResult Authentificate(UserLoginDTO user)
+        {
+            var response = _userService.Authentificate(user);
+
+            if (response == null) //adica nu avem userul in baza de date
+            {
+                return BadRequest(new {Message = "Username or Password is invalid!"});
+            }
+
+            return Ok(response);
+        }
+
+        [AuthorizationAttribute(Role.Admin)]
         [HttpGet("byId")]
-        public IActionResult GetById(Guid Id)
+        public IActionResult GetByIdWithDto(Guid Id)
         {
             return Ok(_userService.GetUserByUserId(Id));
         }
-        
+
+        [AuthorizationAttribute(Role.Admin)]
         [HttpGet("allUsers")]
-        public  IActionResult GetAllUsers() 
+        public IActionResult GetAllUsers()
         {
             return Ok(_userService.GetAllUsers());
         }
-        
-        
+
+        [AuthorizationAttribute(Role.Admin)]
         [HttpGet("byname")]
         public IActionResult GetAllUsersByName(string name)
         {
             return Ok(_userService.GetAllUsersByName(name));
         }
-        
-        
+
+
         //POST
-        [HttpPost("create")]
-        public IActionResult Create(RegisterUserDTO user)
+        [HttpPost("createUser")]
+        public IActionResult CreateUser(UserRegisterDTO user)
         {
             _userService.CreateUser(user);
             return Ok();
         }
         
+        [HttpPost("createAdmin")]
+        public IActionResult CreateAdmin(UserRegisterDTO user)
+        {
+            _userService.CreateAdmin(user);
+            return Ok();
+        }
+
         //PUT
         [HttpPut("updateUser")]
-        public IActionResult Update(RegisterUserDTO user, Guid id)
+        public IActionResult Update(UserRegisterDTO user, Guid id)
         {
             _userService.UpdateUser(user, id);
             return Ok();
         }
-        
-        
+
+
         //DELETE
+        [AuthorizationAttribute(Role.Admin)]
         [HttpDelete]
         public IActionResult DeleteById(Guid Id)
         {
