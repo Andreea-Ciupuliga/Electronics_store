@@ -7,7 +7,7 @@ namespace Electronics_store.Models
     public class Category : BaseEntity
     {
         public string Name { get; set; }
-        
+
         [JsonIgnore]
         public ICollection<Product> Products { get; set; }
     }
