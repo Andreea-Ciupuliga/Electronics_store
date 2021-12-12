@@ -8,9 +8,6 @@ namespace Electronics_store.Data
         //Pentru a manipula baza de date avem nevoie de "context".
         //Aici o sa declaram toate tabelele noastre ca seturi
 
-        public DbSet<DataBaseModel> DataBaseModels { get; set; } // ca sa ne declaram noi modelul si ca sa ne si adauge in baza de date
-
-
         public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Category> Categories { get; set; }
