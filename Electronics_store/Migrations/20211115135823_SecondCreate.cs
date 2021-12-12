@@ -25,7 +25,7 @@ namespace Electronics_store.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Password",
+                name: "PasswordHash",
                 table: "Users",
                 type: "nvarchar(max)",
                 nullable: true);
@@ -52,7 +52,7 @@ namespace Electronics_store.Migrations
                 table: "Users");
 
             migrationBuilder.DropColumn(
-                name: "Password",
+                name: "PasswordHash",
                 table: "Users");
 
             migrationBuilder.DropColumn(
