@@ -2,7 +2,7 @@
 
 namespace Electronics_store.DTOs
 {
-    public class RespondUserDTO
+    public class UserRespondDTO
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
