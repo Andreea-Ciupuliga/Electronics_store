@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Electronics_store.Data;
-using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.GenericRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Electronics_store.Repositories.ProductRepository
 {
@@ -15,18 +16,28 @@ namespace Electronics_store.Repositories.ProductRepository
             _context = context;
         }
         
-        public IQueryable<Product> GetAllProducts()
+        public List<Product> GetAllProducts()
         {
-            return _context.Products.Select(x => new Product
-            {
-                Id=x.Id,
-                Name = x.Name,
-                Price = x.Price,
-                Description = x.Description,
-                CategoryId = x.CategoryId,
-                DateCreated = x.DateCreated,
-                DateModified = x. DateModified
-            });
+            return new List<Product>(_context.Products.AsNoTracking().ToList());
+
+            //alta varianta 
+            
+            // return _context.Products.Select(x => new Product
+            // {
+            //     Id=x.Id,
+            //     Name = x.Name,
+            //     Price = x.Price,
+            //     Description = x.Description,
+            //     CategoryId = x.CategoryId,
+            //     DateCreated = x.DateCreated,
+            //     DateModified = x. DateModified
+            // });
+            
+        }
+
+        public Product GetByName(string name)
+        {
+            return _context.Products.FirstOrDefault(p=>p.Name.Equals(name));
         }
     }
 }
