@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.ProductRepository;
 
@@ -10,35 +10,50 @@ namespace Electronics_store.Services.ProductService
     public class ProductService : IProductService
     {
         public IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository,IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
-        public IQueryable<Product>  GetAllProducts()
+        public List<ProductRespondDTO>  GetAllProducts()
         {
-            IQueryable<Product>  productsList = _productRepository.GetAllProducts();
-            return productsList;
+            List<Product>  productsList = _productRepository.GetAllProducts();
+            List<ProductRespondDTO> productRespondDto  = _mapper.Map<List<ProductRespondDTO>>(productsList);
+            return productRespondDto;
+
         }
 
-        public Product GetProductByProductId(Guid Id)
+        public ProductRespondDTO GetProductByProductId(Guid Id)
         {
             Product product = _productRepository.FindById(Id);
-            return product;
+            ProductRespondDTO productRespondDto  = _mapper.Map<ProductRespondDTO>(product);
+            return productRespondDto;
         }
 
-        public void CreateProduct(Product entity)
+        public void CreateProduct(ProductRegisterDTO entity)
         {
-            var productToCreate = new Product
-            {
-                Name = entity.Name,
-                Price = entity.Price,
-                Description = entity.Description,
-                CategoryId = entity.CategoryId,
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now
-            };
+            // verific ca numele produsului sa fie unic
+            if(_productRepository.GetByName(entity.Name)!=null)
+                throw new Exception("Product already exists");
+            
+            var productToCreate = _mapper.Map<Product>(entity);
+            productToCreate.DateCreated = DateTime.Now; 
+            productToCreate.DateModified = DateTime.Now; 
+            
+            //o alta varianta
+            
+            // var productToCreate = new Product
+            // {
+            //     Name = entity.Name,
+            //     Price = entity.Price,
+            //     Description = entity.Description,
+            //     CategoryId = entity.CategoryId,
+            //     DateCreated = DateTime.Now,
+            //     DateModified = DateTime.Now
+            // };
 
             _productRepository.Create(productToCreate);
             _productRepository.Save();
