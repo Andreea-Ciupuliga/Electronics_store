@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.CategoryRepository;
 
@@ -10,32 +10,46 @@ namespace Electronics_store.Services.CategoryService
     public class CategoryService : ICategoryService
     {
         public ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository,IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
-        public IQueryable<Category> GetAllCategories()
+        public List<CategoryRespondDTO> GetAllCategories()
         {
-            IQueryable<Category> categoriesList = _categoryRepository.GetAllCategories();
-            return categoriesList;
+            List<Category> categoriesList = _categoryRepository.GetAllCategories();
+            List<CategoryRespondDTO> categoryRespondDTO  = _mapper.Map<List<CategoryRespondDTO>>(categoriesList);
+            return categoryRespondDTO;
         }
 
-        public Category GetCategoryByCategoryId(Guid Id)
+        public CategoryRespondDTO GetCategoryByCategoryId(Guid Id)
         {
             Category category = _categoryRepository.FindById(Id);
-            return category;
+            CategoryRespondDTO categoryRespondDTO  = _mapper.Map<CategoryRespondDTO>(category);
+            return categoryRespondDTO;
         }
 
-        public void CreateCategory(Category entity)
+        public void CreateCategory(CategoryRegisterDTO entity)
         {
-            var categoryToCreate = new Category
-            {
-                Name = entity.Name,
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now
-            };
+            if(_categoryRepository.GetByName(entity.Name)!=null)
+                throw new Exception("Category already exists");
+            
+            var categoryToCreate =_mapper.Map<Category>(entity);
+            categoryToCreate.DateCreated= DateTime.Now;
+            categoryToCreate.DateModified= DateTime.Now;
+            
+            
+            //alta varianta
+            
+            // var categoryToCreate = new Category
+            // {
+            //     Name = entity.Name,
+            //     DateCreated = DateTime.Now,
+            //     DateModified = DateTime.Now
+            // };
 
             _categoryRepository.Create(categoryToCreate);
             _categoryRepository.Save();
