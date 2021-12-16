@@ -16,10 +16,15 @@ namespace Electronics_store.Profiles
             CreateMap<User, UserResponseTokenDTO>();
             
             //Category
-            CreateMap<Category, CategoryRegisterDTO>();
+            CreateMap<CategoryRegisterDTO, Category>();
+            CreateMap<Category, CategoryRespondDTO>();
             
             //Product
-            CreateMap<Product, ProductRegisterDTO>();
+            CreateMap<ProductRegisterDTO, Product>();
+            CreateMap<Product, ProductRespondDTO>();
+            
+            //Order
+            CreateMap<Order, OrderRegisterDTO>();
         }
 
         
