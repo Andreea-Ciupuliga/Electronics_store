@@ -1,5 +1,6 @@
 ﻿using System;
 using Electronics_store.Data;
+using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Services.CategoryService;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ namespace Electronics_store.Controllers
         
         //POST
         [HttpPost("create")]
-        public IActionResult Create(Category category)
+        public IActionResult Create(CategoryRegisterDTO category)
         {
             _categoryService.CreateCategory(category);
             return Ok();
