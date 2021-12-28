@@ -8,6 +8,7 @@ using Electronics_store.Models;
 using Electronics_store.Repositories.UserRepository;
 using Electronics_store.Utilities;
 using Electronics_store.Utilities.JWTUtils;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using BCryptNet = BCrypt.Net.BCrypt;
 
@@ -33,7 +34,7 @@ namespace Electronics_store.Services.UserService
         public UserRespondDTO GetUserByUserId(Guid Id)
         {
             User user = _userRepository.FindById(Id);
-            UserRespondDTO userRespondDto  = _mapper.Map<UserRespondDTO >(user);
+            UserRespondDTO userRespondDto  = _mapper.Map<UserRespondDTO>(user);
             return userRespondDto;
         }
         
@@ -108,30 +109,41 @@ namespace Electronics_store.Services.UserService
 
         public void UpdateUser(UserRegisterDTO newUser, Guid id)
         {
-            // User userToUpdate = _userRepository.FindById(id);
-            // userToUpdate =_mapper.Map<User>(newUser);
-            // _userRepository.Save();
+            User userToUpdate = _userRepository.FindById(id);
             
-            User user = _userRepository.FindById(id);
+            userToUpdate =_mapper.Map<UserRegisterDTO,User>(newUser,userToUpdate);
             
-            if (newUser.FirstName != null)
-                user.FirstName = newUser.FirstName;
-            
-            if (newUser.LastName != null)
-                user.LastName = newUser.LastName;
-            
-            if (newUser.Email != null)
-                user.Email = newUser.Email;
-            
-            if (newUser.Username != null)
-                user.Username = newUser.Username;
-            
-            if (newUser.PasswordHash != null)
-                user.PasswordHash = newUser.PasswordHash;
-            
-            user.DateModified = DateTime.Now;
+            userToUpdate.DateModified =DateTime.Now;
 
-            _userRepository.Save();
+            try
+            {
+                _userRepository.Update(userToUpdate);
+                _userRepository.Save();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            // User user = _userRepository.FindById(id);
+            //
+            // if (newUser.FirstName != null)
+            //     user.FirstName = newUser.FirstName;
+            //
+            // if (newUser.LastName != null)
+            //     user.LastName = newUser.LastName;
+            //
+            // if (newUser.Email != null)
+            //     user.Email = newUser.Email;
+            //
+            // if (newUser.Username != null)
+            //     user.Username = newUser.Username;
+            //
+            // if (newUser.PasswordHash != null)
+            //     user.PasswordHash = newUser.PasswordHash;
+            //
+            // user.DateModified = DateTime.Now;
+            //
+            // _userRepository.Save();
         }
 
         public UserResponseTokenDTO Authentificate(UserLoginDTO model) //asta e o metoda care verifica parolele (hash-ul cu parola noastra)
