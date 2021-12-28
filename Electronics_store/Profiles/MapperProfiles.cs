@@ -10,8 +10,8 @@ namespace Electronics_store.Profiles
         {
             //User
             CreateMap<User, UserRespondDTO>();
-            CreateMap<User, UserRegisterDTO>();
-            CreateMap<UserRegisterDTO, User>();
+            //CreateMap<User, UserRegisterDTO>(); //asta inca nu stiu daca imi trebuie sau nu
+            CreateMap<UserRegisterDTO, User>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<User, UserLoginDTO>();
             CreateMap<User, UserResponseTokenDTO>();
             
