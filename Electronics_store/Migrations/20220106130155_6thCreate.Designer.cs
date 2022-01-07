@@ -4,14 +4,16 @@ using Electronics_store.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Electronics_store.Migrations
 {
     [DbContext(typeof(ElectronicsStoreContext))]
-    partial class ElectronicsStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20220106130155_6thCreate")]
+    partial class _6thCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
