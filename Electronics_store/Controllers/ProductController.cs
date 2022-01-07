@@ -45,7 +45,7 @@ namespace Electronics_store.Controllers
         
         //PUT
         [HttpPut("update")]
-        public IActionResult Update(Product product, Guid id)
+        public IActionResult Update(ProductUpdateDTO product, Guid id)
         {
             _productService.UpdateProduct(product,id);
             return Ok();
