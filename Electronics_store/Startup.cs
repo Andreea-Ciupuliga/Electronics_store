@@ -6,9 +6,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Electronics_store.Data;
 using Electronics_store.Repositories.CategoryRepository;
+using Electronics_store.Repositories.DeliveryAddressRepository;
+using Electronics_store.Repositories.OrderProductRelationRepository;
+using Electronics_store.Repositories.OrderRepository;
 using Electronics_store.Repositories.ProductRepository;
 using Electronics_store.Repositories.UserRepository;
 using Electronics_store.Services.CategoryService;
+using Electronics_store.Services.DeliveryAddressService;
+using Electronics_store.Services.OrderProductRelationService;
+using Electronics_store.Services.OrderService;
 using Electronics_store.Services.ProductService;
 using Electronics_store.Services.UserService;
 using Electronics_store.Utilities;
@@ -47,6 +53,9 @@ namespace Electronics_store
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IDeliveryAddressRepository, DeliveryAddressRepository>();
+            services.AddTransient<IOrderProductRelationRepository, OrderProductRelationRepository>();
             
             //se creeaza cand se face primul request
             //services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
@@ -60,6 +69,9 @@ namespace Electronics_store
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IDeliveryAddressService, DeliveryAddressService>();
+            services.AddTransient<IOrderProductRelationService, OrderProductRelationService>();
             services.AddDbContext<ElectronicsStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
