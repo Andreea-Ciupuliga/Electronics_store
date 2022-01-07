@@ -4,6 +4,7 @@ using AutoMapper;
 using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.CategoryRepository;
+using Microsoft.Data.SqlClient;
 
 namespace Electronics_store.Services.CategoryService
 {
@@ -21,6 +22,10 @@ namespace Electronics_store.Services.CategoryService
         public List<CategoryRespondDTO> GetAllCategories()
         {
             List<Category> categoriesList = _categoryRepository.GetAllCategories();
+            
+            if(categoriesList.Count == 0)
+                throw new Exception("There are no categories");
+            
             List<CategoryRespondDTO> categoryRespondDTO  = _mapper.Map<List<CategoryRespondDTO>>(categoriesList);
             return categoryRespondDTO;
         }
@@ -28,6 +33,10 @@ namespace Electronics_store.Services.CategoryService
         public CategoryRespondDTO GetCategoryByCategoryId(Guid Id)
         {
             Category category = _categoryRepository.FindById(Id);
+            
+            if(category == null)
+                throw new Exception("Category not found");
+            
             CategoryRespondDTO categoryRespondDTO  = _mapper.Map<CategoryRespondDTO>(category);
             return categoryRespondDTO;
         }
@@ -40,16 +49,6 @@ namespace Electronics_store.Services.CategoryService
             var categoryToCreate =_mapper.Map<Category>(entity);
             categoryToCreate.DateCreated= DateTime.Now;
             categoryToCreate.DateModified= DateTime.Now;
-            
-            
-            //alta varianta
-            
-            // var categoryToCreate = new Category
-            // {
-            //     Name = entity.Name,
-            //     DateCreated = DateTime.Now,
-            //     DateModified = DateTime.Now
-            // };
 
             _categoryRepository.Create(categoryToCreate);
             _categoryRepository.Save();
@@ -58,13 +57,33 @@ namespace Electronics_store.Services.CategoryService
         public void DeleteCategoryById(Guid id)
         {
             Category category = _categoryRepository.FindById(id);
+            
+            if(category == null)
+                throw new Exception("Category not found");
+            
             _categoryRepository.Delete(category);
             _categoryRepository.Save();
         }
 
-        public void UpdateCategory(Category category, Guid id)
+        public void UpdateCategory(CategoryRegisterDTO category, Guid id)
         {
-            throw new NotImplementedException();
+            Category categoryToUpdate = _categoryRepository.FindById(id);
+            
+            if(categoryToUpdate == null)
+                throw new Exception("Category not found");
+            
+            categoryToUpdate =_mapper.Map<CategoryRegisterDTO,Category>(category,categoryToUpdate);
+            categoryToUpdate.DateModified =DateTime.Now;
+
+            try
+            {
+                _categoryRepository.Update(categoryToUpdate);
+                _categoryRepository.Save();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

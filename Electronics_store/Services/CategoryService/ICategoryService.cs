@@ -15,6 +15,6 @@ namespace Electronics_store.Services.CategoryService
 
         void DeleteCategoryById(Guid id);
 
-        void UpdateCategory(Category category, Guid id);
+        void UpdateCategory(CategoryRegisterDTO category, Guid id);
     }
 }
