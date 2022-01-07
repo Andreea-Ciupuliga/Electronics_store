@@ -16,15 +16,24 @@ namespace Electronics_store.Profiles
             CreateMap<User, UserResponseTokenDTO>();
             
             //Category
-            CreateMap<CategoryRegisterDTO, Category>();
+            CreateMap<CategoryRegisterDTO, Category>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
             CreateMap<Category, CategoryRespondDTO>();
             
             //Product
-            CreateMap<ProductRegisterDTO, Product>();
+            CreateMap<ProductRegisterDTO, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            CreateMap<ProductUpdateDTO, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
             CreateMap<Product, ProductRespondDTO>();
             
             //Order
-            CreateMap<Order, OrderRegisterDTO>();
+            CreateMap<OrderRegisterDTO,Order>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            CreateMap<OrderUpdateDTO,Order>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            
+            //DeliveryAddress
+            CreateMap<DeliveryAddressRegisterDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            CreateMap<DeliveryAddressUpdateDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            
+            //OrderProductRelation
+            CreateMap<OrderProductRelationRegisterDTO,OrderProductRelation>();
         }
 
         
