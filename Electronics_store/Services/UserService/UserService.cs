@@ -34,6 +34,10 @@ namespace Electronics_store.Services.UserService
         public UserRespondDTO GetUserByUserId(Guid Id)
         {
             User user = _userRepository.FindById(Id);
+            
+            if(user == null)
+                throw new Exception("User not found");
+            
             UserRespondDTO userRespondDto  = _mapper.Map<UserRespondDTO>(user);
             return userRespondDto;
         }
@@ -89,6 +93,10 @@ namespace Electronics_store.Services.UserService
         public  List<UserRespondDTO> GetAllUsers()
         {
             List<User> usersList = _userRepository.GetAllUsers();
+            
+            if(usersList.Count == 0)
+                throw new Exception("There are no users");
+            
             List<UserRespondDTO> userRespondDto  = _mapper.Map<List<UserRespondDTO>>(usersList);
             return userRespondDto;
         }
@@ -96,6 +104,8 @@ namespace Electronics_store.Services.UserService
         public List<UserRespondDTO> GetAllUsersByName(string name)
         {
             List<User> usersList = _userRepository.GetAllUsersByName(name);
+            if(usersList.Count == 0)
+                throw new Exception("There are no users with this name");
             List<UserRespondDTO> userRespondDto  = _mapper.Map<List<UserRespondDTO>>(usersList);
             return userRespondDto;
         }
@@ -103,6 +113,10 @@ namespace Electronics_store.Services.UserService
         public void DeleteUserById(Guid id)
         {
             User user = _userRepository.FindById(id);
+            
+            if(user == null)
+                throw new Exception("User not found");
+            
             _userRepository.Delete(user);
             _userRepository.Save();
         }
@@ -111,9 +125,13 @@ namespace Electronics_store.Services.UserService
         {
             User userToUpdate = _userRepository.FindById(id);
             
+            if(userToUpdate == null)
+                throw new Exception("User not found");
+            
             userToUpdate =_mapper.Map<UserRegisterDTO,User>(newUser,userToUpdate);
             
             userToUpdate.DateModified =DateTime.Now;
+            userToUpdate.PasswordHash = BCryptNet.HashPassword(newUser.PasswordHash); 
 
             try
             {
