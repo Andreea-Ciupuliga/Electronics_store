@@ -4,6 +4,7 @@ using AutoMapper;
 using Electronics_store.DTOs;
 using Electronics_store.Models;
 using Electronics_store.Repositories.ProductRepository;
+using Microsoft.Data.SqlClient;
 
 namespace Electronics_store.Services.ProductService
 {
@@ -21,6 +22,10 @@ namespace Electronics_store.Services.ProductService
         public List<ProductRespondDTO>  GetAllProducts()
         {
             List<Product>  productsList = _productRepository.GetAllProducts();
+            
+            if(productsList.Count == 0)
+                throw new Exception("There are no products");
+            
             List<ProductRespondDTO> productRespondDto  = _mapper.Map<List<ProductRespondDTO>>(productsList);
             return productRespondDto;
 
@@ -29,6 +34,10 @@ namespace Electronics_store.Services.ProductService
         public ProductRespondDTO GetProductByProductId(Guid Id)
         {
             Product product = _productRepository.FindById(Id);
+            
+            if(product == null)
+                throw new Exception("Product not found");
+            
             ProductRespondDTO productRespondDto  = _mapper.Map<ProductRespondDTO>(product);
             return productRespondDto;
         }
@@ -41,19 +50,7 @@ namespace Electronics_store.Services.ProductService
             
             var productToCreate = _mapper.Map<Product>(entity);
             productToCreate.DateCreated = DateTime.Now; 
-            productToCreate.DateModified = DateTime.Now; 
-            
-            //o alta varianta
-            
-            // var productToCreate = new Product
-            // {
-            //     Name = entity.Name,
-            //     Price = entity.Price,
-            //     Description = entity.Description,
-            //     CategoryId = entity.CategoryId,
-            //     DateCreated = DateTime.Now,
-            //     DateModified = DateTime.Now
-            // };
+            productToCreate.DateModified = DateTime.Now;
 
             _productRepository.Create(productToCreate);
             _productRepository.Save();
@@ -62,13 +59,33 @@ namespace Electronics_store.Services.ProductService
         public void DeleteProductById(Guid id)
         {
             Product product = _productRepository.FindById(id);
+            
+            if(product == null)
+                throw new Exception("Product not found");
+            
             _productRepository.Delete(product);
             _productRepository.Save();
         }
 
-        public void UpdateProduct(Product product, Guid id)
+        public void UpdateProduct(ProductUpdateDTO newproduct, Guid id)
         {
-            throw new NotImplementedException();
+            Product productToUpdate = _productRepository.FindById(id);
+            
+            if(productToUpdate == null)
+                throw new Exception("Product not found");
+            
+            productToUpdate =_mapper.Map<ProductUpdateDTO,Product>(newproduct,productToUpdate);
+            productToUpdate.DateModified =DateTime.Now;
+
+            try
+            {
+                _productRepository.Update(productToUpdate);
+                _productRepository.Save();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

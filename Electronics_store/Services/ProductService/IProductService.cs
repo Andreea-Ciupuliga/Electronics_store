@@ -15,6 +15,6 @@ namespace Electronics_store.Services.ProductService
         
         void DeleteProductById(Guid id);
         
-        void UpdateProduct(Product product, Guid id);
+        void UpdateProduct(ProductUpdateDTO product, Guid id);
     }
 }
