@@ -25,6 +25,7 @@ namespace Electronics_store
 {
     public class Startup
     {
+        public string CorsAllowSpecificOrigin = "frontendAllowOrigin";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,6 +47,17 @@ namespace Electronics_store
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Electronics_store", Version = "v1" });
             });
             
+            services.AddCors(option =>
+            {
+                option.AddPolicy(name: CorsAllowSpecificOrigin,
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:4200", "https://localhost:4201","http://localhost:4200") //aici punem ce origine avem noi
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
+            });
             
             //repositories
             
@@ -95,6 +107,9 @@ namespace Electronics_store
 
             app.UseRouting();
 
+            //setting for allowing another origin to make request to our server
+            app.UseCors(CorsAllowSpecificOrigin);
+            
            app.UseMiddleware<JWTMiddleware>();
             
             app.UseAuthorization();
