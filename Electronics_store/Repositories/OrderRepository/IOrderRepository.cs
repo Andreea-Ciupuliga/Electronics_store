@@ -7,6 +7,7 @@ namespace Electronics_store.Repositories.OrderRepository
     public interface IOrderRepository : IGenericRepository<Order>
     {
         List<Order> GetAllOrders();
+        List<Order> GetAllOrdersForAUser();
         
     }
 }
