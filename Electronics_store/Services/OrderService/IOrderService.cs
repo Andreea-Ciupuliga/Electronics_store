@@ -12,6 +12,7 @@ namespace Electronics_store.Services.OrderService
         void CreateOrder(OrderRegisterDTO entity);
         void DeleteOrderById(Guid id);
         void UpdateOrder(OrderUpdateDTO order, Guid id);
-        
+        public List<Order> GetAllOrdersForAUser();
+
     }
 }

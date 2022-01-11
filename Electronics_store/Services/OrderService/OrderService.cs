@@ -43,6 +43,11 @@ namespace Electronics_store.Services.OrderService
             
             return ordersList;
         }
+        
+        public List<Order> GetAllOrdersForAUser()
+        {
+            return _orderRepository.GetAllOrdersForAUser();
+        }
 
         public void CreateOrder(OrderRegisterDTO entity)
         {
