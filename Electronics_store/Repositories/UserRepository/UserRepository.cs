@@ -67,5 +67,14 @@ namespace Electronics_store.Repositories.UserRepository
         {
             return _context.Users.FirstOrDefault(u=>u.Email.Equals(name));
         }
+        
+        public List<Order> GetAllOrdersForAUser()
+        {
+            var result = _table.Join(_context.Orders, user => user.Id, order => order.UserId,
+                (user, order) => new {user, order}).Select(obj => obj.order).Where(obj=>obj.User.Email.Equals("User1@email.com"));
+        
+            return result.ToList();
+        }
+        
     }
 }

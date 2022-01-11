@@ -11,6 +11,8 @@ namespace Electronics_store.Repositories.UserRepository
         List<User> GetAllUsersByName(string name);
         User GetByUsername(string name);
         User GetByEmail(string name);
+        
+        List<Order> GetAllOrdersForAUser();
 
     }
 }
