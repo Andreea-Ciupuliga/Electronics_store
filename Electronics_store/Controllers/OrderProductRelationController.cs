@@ -21,7 +21,7 @@ namespace Electronics_store.Controllers
         
         //POST
         [HttpPost("create")]
-        public IActionResult Create(OrderProductRelationRegisterDTO orderProductRelation)
+        public IActionResult Create([FromBody] OrderProductRelationRegisterDTO orderProductRelation)
         {
             _orderProductRelationService.CreateOrderProductRelation(orderProductRelation);
             return Ok();
