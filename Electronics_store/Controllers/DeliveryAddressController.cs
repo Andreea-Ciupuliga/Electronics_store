@@ -20,7 +20,7 @@ namespace Electronics_store.Controllers
         }
         
         //GET
-        [HttpGet("byId")]
+        [HttpGet("byId/{id}")]
         public IActionResult GetById(Guid Id)
         {
             return Ok(_deliveryAddressService.GetDeliveryAddressByDeliveryAddressId(Id));
@@ -36,15 +36,15 @@ namespace Electronics_store.Controllers
         
         //POST
         [HttpPost("create")]
-        public IActionResult Create(DeliveryAddressRegisterDTO deliveryAddress)
+        public IActionResult Create([FromBody] DeliveryAddressRegisterDTO deliveryAddress)
         {
             _deliveryAddressService.CreateDeliveryAddress(deliveryAddress);
             return Ok();
         }
         
         //PUT
-        [HttpPut("update")]
-        public IActionResult Update(DeliveryAddressUpdateDTO deliveryAddress, Guid id)
+        [HttpPut("update/{id}")]
+        public IActionResult Update([FromBody] DeliveryAddressUpdateDTO deliveryAddress, Guid id)
         {
             _deliveryAddressService.UpdateDeliveryAddress(deliveryAddress,id);
             return Ok();
@@ -52,7 +52,7 @@ namespace Electronics_store.Controllers
         
         
         //DELETE
-        [HttpDelete]
+        [HttpDelete("delete/{id}")]
         public IActionResult DeleteById(Guid Id)
         {
             _deliveryAddressService.DeleteDeliveryAddressById(Id);
