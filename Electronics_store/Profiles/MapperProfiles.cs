@@ -21,7 +21,7 @@ namespace Electronics_store.Profiles
             
             //Product
             CreateMap<ProductRegisterDTO, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
-            CreateMap<ProductUpdateDTO, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            CreateMap<ProductUpdateDTO, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null && src.Price!=0));;
             CreateMap<Product, ProductRespondDTO>();
             
             //Order
@@ -30,7 +30,7 @@ namespace Electronics_store.Profiles
             
             //DeliveryAddress
             CreateMap<DeliveryAddressRegisterDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
-            CreateMap<DeliveryAddressUpdateDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
+            CreateMap<DeliveryAddressUpdateDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null ));;
             
             //OrderProductRelation
             CreateMap<OrderProductRelationRegisterDTO,OrderProductRelation>();
