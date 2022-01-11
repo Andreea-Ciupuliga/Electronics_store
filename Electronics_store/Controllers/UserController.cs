@@ -1,5 +1,4 @@
 ﻿using System;
-//using AutoMapper;
 using Electronics_store.Data;
 using Electronics_store.DTOs;
 using Electronics_store.Models;
@@ -36,21 +35,27 @@ namespace Electronics_store.Controllers
             return Ok(response);
         }
 
-        [AuthorizationAttribute(Role.Admin)]
+        //[AuthorizationAttribute(Role.Admin)]
         [HttpGet("byId")]
         public IActionResult GetByIdWithDto(Guid Id)
         {
             return Ok(_userService.GetUserByUserId(Id));
         }
 
-        [AuthorizationAttribute(Role.Admin)]
+        //[AuthorizationAttribute(Role.Admin)]
         [HttpGet("allUsers")]
         public IActionResult GetAllUsers()
         {
             return Ok(_userService.GetAllUsers());
         }
+        
+        [HttpGet("GetAllOrdersForAUser")]
+        public IActionResult GetAllOrdersForAUser()
+        {
+            return Ok(_userService.GetAllOrdersForAUser());
+        }
 
-        [AuthorizationAttribute(Role.Admin)]
+        //[AuthorizationAttribute(Role.Admin)]
         [HttpGet("byname")]
         public IActionResult GetAllUsersByName(string name)
         {
@@ -74,6 +79,7 @@ namespace Electronics_store.Controllers
         }
 
         //PUT
+        [AuthorizationAttribute(Role.User,Role.Admin)]
         [HttpPut("updateUser")]
         public IActionResult Update(UserRegisterDTO user, Guid id)
         {
@@ -83,7 +89,7 @@ namespace Electronics_store.Controllers
 
 
         //DELETE
-        [AuthorizationAttribute(Role.Admin)]
+        //[AuthorizationAttribute(Role.Admin)]
         [HttpDelete]
         public IActionResult DeleteById(Guid Id)
         {

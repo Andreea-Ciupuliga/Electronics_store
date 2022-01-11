@@ -33,6 +33,12 @@ namespace Electronics_store.Controllers
             return Ok(_orderService.GetAllOrders());
         }
         
+        [HttpGet("allOrdersForAUser")]
+        public IActionResult GetAllOrdersForAUser() 
+        {
+            return Ok(_orderService.GetAllOrdersForAUser());
+        }
+        
         
         //POST
         [HttpPost("create")]
