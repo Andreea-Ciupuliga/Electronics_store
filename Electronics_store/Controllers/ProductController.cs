@@ -37,15 +37,15 @@ namespace Electronics_store.Controllers
         
         //POST
         [HttpPost("create")]
-        public IActionResult Create(ProductRegisterDTO product)
+        public IActionResult Create([FromBody] ProductRegisterDTO product)
         {
             _productService.CreateProduct(product);
             return Ok();
         }
         
         //PUT
-        [HttpPut("update")]
-        public IActionResult Update(ProductUpdateDTO product, Guid id)
+        [HttpPut("update/{id}")]
+        public IActionResult Update([FromBody] ProductUpdateDTO product, Guid id)
         {
             _productService.UpdateProduct(product,id);
             return Ok();
