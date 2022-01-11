@@ -36,7 +36,7 @@ namespace Electronics_store.Controllers
         }
 
         //[AuthorizationAttribute(Role.Admin)]
-        [HttpGet("byId")]
+        [HttpGet("byId/{id}")]
         public IActionResult GetByIdWithDto(Guid Id)
         {
             return Ok(_userService.GetUserByUserId(Id));
@@ -65,14 +65,14 @@ namespace Electronics_store.Controllers
 
         //POST
         [HttpPost("createUser")]
-        public IActionResult CreateUser(UserRegisterDTO user)
+        public IActionResult CreateUser([FromBody] UserRegisterDTO user)
         {
             _userService.CreateUser(user);
             return Ok();
         }
         
         [HttpPost("createAdmin")]
-        public IActionResult CreateAdmin(UserRegisterDTO user)
+        public IActionResult CreateAdmin([FromBody] UserRegisterDTO user)
         {
             _userService.CreateAdmin(user);
             return Ok();
@@ -80,8 +80,8 @@ namespace Electronics_store.Controllers
 
         //PUT
         [AuthorizationAttribute(Role.User,Role.Admin)]
-        [HttpPut("updateUser")]
-        public IActionResult Update(UserRegisterDTO user, Guid id)
+        [HttpPut("update/{id}")]
+        public IActionResult Update([FromBody] UserRegisterDTO user, Guid id)
         {
             _userService.UpdateUser(user, id);
             return Ok();
@@ -90,7 +90,7 @@ namespace Electronics_store.Controllers
 
         //DELETE
         //[AuthorizationAttribute(Role.Admin)]
-        [HttpDelete]
+        [HttpDelete("delete/{id}")]
         public IActionResult DeleteById(Guid Id)
         {
             _userService.DeleteUserById(Id);
