@@ -21,7 +21,7 @@ namespace Electronics_store.Controllers
         }
         
         //GET
-        [HttpGet("byId")]
+        [HttpGet("byId/{id}")]
         public IActionResult GetById(Guid Id)
         {
             return Ok(_categoryService.GetCategoryByCategoryId(Id));
@@ -37,15 +37,15 @@ namespace Electronics_store.Controllers
         
         //POST
         [HttpPost("create")]
-        public IActionResult Create(CategoryRegisterDTO category)
+        public IActionResult Create([FromBody] CategoryRegisterDTO category)
         {
             _categoryService.CreateCategory(category);
             return Ok();
         }
         
         //PUT
-        [HttpPut("update")]
-        public IActionResult Update(CategoryRegisterDTO category, Guid id)
+        [HttpPut("update/{id}")]
+        public IActionResult Update([FromBody] CategoryRegisterDTO category, Guid id)
         {
             _categoryService.UpdateCategory(category,id);
             return Ok();
@@ -53,7 +53,7 @@ namespace Electronics_store.Controllers
         
         
         //DELETE
-        [HttpDelete]
+        [HttpDelete("delete/{id}")]
         public IActionResult DeleteById(Guid Id)
         {
             _categoryService.DeleteCategoryById(Id);
