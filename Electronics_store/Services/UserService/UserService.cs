@@ -22,36 +22,36 @@ namespace Electronics_store.Services.UserService
         private readonly AppSettings _appSettings;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository,ElectronicsStoreContext context, IJWTUtils ijwtUtils, IOptions<AppSettings> appSettings,IMapper mapper)
+        public UserService(IUserRepository userRepository, ElectronicsStoreContext context, IJWTUtils ijwtUtils,
+            IOptions<AppSettings> appSettings, IMapper mapper)
         {
             _userRepository = userRepository;
             _context = context;
-           _ijwtUtils = ijwtUtils;
-           _appSettings = appSettings.Value;
-           _mapper = mapper;
+            _ijwtUtils = ijwtUtils;
+            _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
         public UserRespondDTO GetUserByUserId(Guid Id)
         {
             User user = _userRepository.FindById(Id);
-            
-            if(user == null)
+
+            if (user == null)
                 throw new Exception("User not found");
-            
-            UserRespondDTO userRespondDto  = _mapper.Map<UserRespondDTO>(user);
+
+            UserRespondDTO userRespondDto = _mapper.Map<UserRespondDTO>(user);
             return userRespondDto;
         }
-        
+
         public void CreateUser(UserRegisterDTO user)
         {
-            
             // verific ca username ul si emailul sa fie unice(sa nu se regaseasca in baza de date)
-            if(_userRepository.GetByEmail(user.Email)!=null || _userRepository.GetByUsername(user.Username)!=null)
+            if (_userRepository.GetByEmail(user.Email) != null || _userRepository.GetByUsername(user.Username) != null)
                 throw new Exception("Email or username already exists");
-            
+
             var userToCreate = _mapper.Map<User>(user);
-            userToCreate.Role = Role.User; 
-            userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash); 
+            userToCreate.Role = Role.User;
+            userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash);
             userToCreate.DateCreated = DateTime.Now;
             userToCreate.DateModified = DateTime.Now; 
 
@@ -75,48 +75,49 @@ namespace Electronics_store.Services.UserService
 
         public void CreateAdmin(UserRegisterDTO user)
         {
-            
             // verific ca username ul si emailul sa fie unice(sa nu se regaseasca in baza de date)
-            if(_userRepository.GetByEmail(user.Email)!=null || _userRepository.GetByUsername(user.Username)!=null)
+            if (_userRepository.GetByEmail(user.Email) != null || _userRepository.GetByUsername(user.Username) != null)
                 throw new Exception("Email or username already exists");
-            
+
             var userToCreate = _mapper.Map<User>(user);
-            
-            userToCreate.Role = Role.Admin; 
-            userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash); 
+
+            userToCreate.Role = Role.Admin;
+            userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash);
             userToCreate.DateCreated = DateTime.Now;
             userToCreate.DateModified = DateTime.Now;
-            
+
             _userRepository.Create(userToCreate);
             _userRepository.Save();
         }
-        public  List<UserRespondDTO> GetAllUsers()
+
+        public List<UserRespondDTO> GetAllUsers()
         {
             List<User> usersList = _userRepository.GetAllUsers();
-            
-            if(usersList.Count == 0)
+
+            if (usersList.Count == 0)
                 throw new Exception("There are no users");
-            
-            List<UserRespondDTO> userRespondDto  = _mapper.Map<List<UserRespondDTO>>(usersList);
+
+            List<UserRespondDTO> userRespondDto = _mapper.Map<List<UserRespondDTO>>(usersList);
             return userRespondDto;
         }
+
 
         public List<UserRespondDTO> GetAllUsersByName(string name)
         {
             List<User> usersList = _userRepository.GetAllUsersByName(name);
-            if(usersList.Count == 0)
+            if (usersList.Count == 0)
                 throw new Exception("There are no users with this name");
-            List<UserRespondDTO> userRespondDto  = _mapper.Map<List<UserRespondDTO>>(usersList);
+            List<UserRespondDTO> userRespondDto = _mapper.Map<List<UserRespondDTO>>(usersList);
             return userRespondDto;
         }
 
         public void DeleteUserById(Guid id)
         {
             User user = _userRepository.FindById(id);
-            
-            if(user == null)
+
+            if (user == null)
                 throw new Exception("User not found");
-            
+
             _userRepository.Delete(user);
             _userRepository.Save();
         }
@@ -124,14 +125,14 @@ namespace Electronics_store.Services.UserService
         public void UpdateUser(UserRegisterDTO newUser, Guid id)
         {
             User userToUpdate = _userRepository.FindById(id);
-            
-            if(userToUpdate == null)
+
+            if (userToUpdate == null)
                 throw new Exception("User not found");
-            
-            userToUpdate =_mapper.Map<UserRegisterDTO,User>(newUser,userToUpdate);
-            
-            userToUpdate.DateModified =DateTime.Now;
-            userToUpdate.PasswordHash = BCryptNet.HashPassword(newUser.PasswordHash); 
+
+            userToUpdate = _mapper.Map<UserRegisterDTO, User>(newUser, userToUpdate);
+
+            userToUpdate.DateModified = DateTime.Now;
+            userToUpdate.PasswordHash = BCryptNet.HashPassword(newUser.PasswordHash);
 
             try
             {
@@ -164,19 +165,24 @@ namespace Electronics_store.Services.UserService
             // _userRepository.Save();
         }
 
-        public UserResponseTokenDTO Authentificate(UserLoginDTO model) //asta e o metoda care verifica parolele (hash-ul cu parola noastra)
+        public UserResponseTokenDTO
+            Authentificate(UserLoginDTO model) //asta e o metoda care verifica parolele (hash-ul cu parola noastra)
         {
-        
             var user = _context.Users.FirstOrDefault(x => x.Username.Equals(model.Username));
-        
+
             if (user == null || !BCryptNet.Verify(model.PasswordHash, user.PasswordHash))
             {
                 return null;
             }
-        
+
             //generam jwt token
             var jwtToken = _ijwtUtils.GenerateJWTToken(user);
             return new UserResponseTokenDTO(user, jwtToken);
+        }
+
+        public List<Order> GetAllOrdersForAUser()
+        {
+            return _userRepository.GetAllOrdersForAUser();
         }
     }
 }

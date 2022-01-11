@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Electronics_store.DTOs;
+using Electronics_store.Models;
 
 namespace Electronics_store.Services.UserService
 {
@@ -17,5 +18,6 @@ namespace Electronics_store.Services.UserService
         void UpdateUser(UserRegisterDTO user, Guid id);
 
         UserResponseTokenDTO Authentificate(UserLoginDTO model);
+        public List<Order> GetAllOrdersForAUser();
     }
 }
