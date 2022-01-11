@@ -10,6 +10,7 @@ namespace Electronics_store.Models
         public string Name { get; set; }
         public float Price { get; set; }
         public string Description { get; set; }
+        public string PhotoLink { get; set; }
         [JsonIgnore]
         public ICollection<OrderProductRelation> OrderProductRelations { get; set; }
         
