@@ -21,7 +21,7 @@ namespace Electronics_store.Controllers
         }
         
         //GET
-        [HttpGet("byId")]
+        [HttpGet("byId/{id}")]
         public IActionResult GetById(Guid Id)
         {
             return Ok(_productService.GetProductByProductId(Id));
@@ -53,7 +53,7 @@ namespace Electronics_store.Controllers
         
         
         //DELETE
-        [HttpDelete]
+        [HttpDelete("delete/{id}")]
         public IActionResult DeleteById(Guid Id)
         {
             _productService.DeleteProductById(Id);
