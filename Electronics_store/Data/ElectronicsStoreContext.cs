@@ -26,26 +26,25 @@ namespace Electronics_store.Data
             //aici o sa ne punem relatiile la baza de date
 
             //ONE TO MANY
-            
+
             //User(1)-(M)Order
             builder.Entity<User>() //aici zic ca User are mai multe Orders
                 .HasMany(u => u.Orders)
                 .WithOne(o => o.User);
-            
+
             //Category(1)-(M)Product
 
             builder.Entity<Product>() //se pastreaza ideea de mai sus dar zic invers
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products);
-            
-            
+
+
             //ONE TO ONE
             //Order-DeliveryAddress
             builder.Entity<Order>()
                 .HasOne(o => o.DeliveryAddress)
-                .WithOne(d =>d.Order)
+                .WithOne(d => d.Order)
                 .HasForeignKey<DeliveryAddress>(d => d.OrderId);
-
 
 
             //MANY TO MANY
@@ -66,7 +65,7 @@ namespace Electronics_store.Data
                 .HasOne<Product>(op => op.Product)
                 .WithMany(p => p.OrderProductRelations)
                 .HasForeignKey(op => op.ProductId);
-          
+
 
             base.OnModelCreating(builder);
         }
