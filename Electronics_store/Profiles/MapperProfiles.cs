@@ -31,9 +31,11 @@ namespace Electronics_store.Profiles
             //DeliveryAddress
             CreateMap<DeliveryAddressRegisterDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));;
             CreateMap<DeliveryAddressUpdateDTO,DeliveryAddress>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null ));;
+            CreateMap<OrderRegisterDTO,DeliveryAddressRegisterDTO>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null ));;
             
             //OrderProductRelation
             CreateMap<OrderProductRelationRegisterDTO,OrderProductRelation>();
+            CreateMap<OrderRegisterDTO,OrderProductRelationRegisterDTO>();
         }
 
         
