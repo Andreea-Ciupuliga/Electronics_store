@@ -132,6 +132,8 @@ namespace Electronics_store.Services.UserService
             userToUpdate = _mapper.Map<UserRegisterDTO, User>(newUser, userToUpdate);
 
             userToUpdate.DateModified = DateTime.Now;
+            
+            if(newUser.PasswordHash != null)
             userToUpdate.PasswordHash = BCryptNet.HashPassword(newUser.PasswordHash);
 
             try
