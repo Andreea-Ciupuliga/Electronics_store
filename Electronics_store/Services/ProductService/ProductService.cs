@@ -13,43 +13,47 @@ namespace Electronics_store.Services.ProductService
         public IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository,IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;
         }
 
-        public List<ProductRespondDTO>  GetAllProducts()
+        public List<ProductRespondDTO> GetAllProducts()
         {
-            List<Product>  productsList = _productRepository.GetAllProducts();
-            
-            if(productsList.Count == 0)
-                throw new Exception("There are no products");
-            
-            List<ProductRespondDTO> productRespondDto  = _mapper.Map<List<ProductRespondDTO>>(productsList);
-            return productRespondDto;
+            List<Product> productsList = _productRepository.GetAllProducts();
 
+            if (productsList.Count == 0)
+                throw new Exception("There are no products");
+
+            List<ProductRespondDTO> productRespondDto = _mapper.Map<List<ProductRespondDTO>>(productsList);
+            return productRespondDto;
+        }
+
+        public List<Product> GetAllProductsFromACategory(Guid categoryId)
+        {
+            return _productRepository.GetAllProductsFromACategory(categoryId);
         }
 
         public ProductRespondDTO GetProductByProductId(Guid Id)
         {
             Product product = _productRepository.FindById(Id);
-            
-            if(product == null)
+
+            if (product == null)
                 throw new Exception("Product not found");
-            
-            ProductRespondDTO productRespondDto  = _mapper.Map<ProductRespondDTO>(product);
+
+            ProductRespondDTO productRespondDto = _mapper.Map<ProductRespondDTO>(product);
             return productRespondDto;
         }
 
         public void CreateProduct(ProductRegisterDTO entity)
         {
             // verific ca numele produsului sa fie unic
-            if(_productRepository.GetByName(entity.Name)!=null)
+            if (_productRepository.GetByName(entity.Name) != null)
                 throw new Exception("Product already exists");
-            
+
             var productToCreate = _mapper.Map<Product>(entity);
-            productToCreate.DateCreated = DateTime.Now; 
+            productToCreate.DateCreated = DateTime.Now;
             productToCreate.DateModified = DateTime.Now;
 
             _productRepository.Create(productToCreate);
@@ -59,10 +63,10 @@ namespace Electronics_store.Services.ProductService
         public void DeleteProductById(Guid id)
         {
             Product product = _productRepository.FindById(id);
-            
-            if(product == null)
+
+            if (product == null)
                 throw new Exception("Product not found");
-            
+
             _productRepository.Delete(product);
             _productRepository.Save();
         }
@@ -70,12 +74,12 @@ namespace Electronics_store.Services.ProductService
         public void UpdateProduct(ProductUpdateDTO newproduct, Guid id)
         {
             Product productToUpdate = _productRepository.FindById(id);
-            
-            if(productToUpdate == null)
+
+            if (productToUpdate == null)
                 throw new Exception("Product not found");
-            
-            productToUpdate =_mapper.Map<ProductUpdateDTO,Product>(newproduct,productToUpdate);
-            productToUpdate.DateModified =DateTime.Now;
+
+            productToUpdate = _mapper.Map<ProductUpdateDTO, Product>(newproduct, productToUpdate);
+            productToUpdate.DateModified = DateTime.Now;
 
             try
             {

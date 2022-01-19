@@ -16,5 +16,6 @@ namespace Electronics_store.Services.ProductService
         void DeleteProductById(Guid id);
         
         void UpdateProduct(ProductUpdateDTO product, Guid id);
+        public List<Product> GetAllProductsFromACategory(Guid categoryId);
     }
 }
