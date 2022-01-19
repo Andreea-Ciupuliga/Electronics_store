@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Electronics_store.Data;
 using Electronics_store.Models;
@@ -39,5 +40,14 @@ namespace Electronics_store.Repositories.ProductRepository
         {
             return _context.Products.FirstOrDefault(p=>p.Name.Equals(name));
         }
+
+        public List<Product> GetAllProductsFromACategory(Guid categoryId)
+        {
+            var result = _table.Join(_context.Categories, product => product.CategoryId ,category => category.Id ,
+                (product,category) => new {product,category}).Select(obj => obj.product).Where(obj=>obj.Category.Id.Equals(categoryId));
+        
+            return result.ToList();
+        }
+        
     }
 }
