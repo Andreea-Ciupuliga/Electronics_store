@@ -53,10 +53,10 @@ namespace Electronics_store.Services.UserService
             userToCreate.Role = Role.User;
             userToCreate.PasswordHash = BCryptNet.HashPassword(user.PasswordHash);
             userToCreate.DateCreated = DateTime.Now;
-            userToCreate.DateModified = DateTime.Now; 
+            userToCreate.DateModified = DateTime.Now;
 
             //o alta varianta 
-            
+
             // var userToCreate = new User 
             // {
             //     FirstName = user.FirstName,
@@ -68,7 +68,7 @@ namespace Electronics_store.Services.UserService
             //     DateCreated = DateTime.Now,
             //     DateModified = DateTime.Now
             // };
-            
+
             _userRepository.Create(userToCreate);
             _userRepository.Save();
         }
@@ -180,9 +180,9 @@ namespace Electronics_store.Services.UserService
             return new UserResponseTokenDTO(user, jwtToken);
         }
 
-        public List<Order> GetAllOrdersForAUser()
-        {
-            return _userRepository.GetAllOrdersForAUser();
-        }
+        // public List<Order> GetAllOrdersForAUser()
+        // {
+        //     return _userRepository.GetAllOrdersForAUser();
+        // }
     }
 }

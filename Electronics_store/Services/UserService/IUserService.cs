@@ -18,6 +18,7 @@ namespace Electronics_store.Services.UserService
         void UpdateUser(UserRegisterDTO user, Guid id);
 
         UserResponseTokenDTO Authentificate(UserLoginDTO model);
-        public List<Order> GetAllOrdersForAUser();
+        
+        // public List<Order> GetAllOrdersForAUser();
     }
 }
