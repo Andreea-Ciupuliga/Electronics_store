@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Electronics_store.DTOs
 {
     public class CategoryRegisterDTO
