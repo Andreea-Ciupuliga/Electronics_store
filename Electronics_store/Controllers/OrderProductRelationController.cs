@@ -7,18 +7,19 @@ namespace Electronics_store.Controllers
 {
     [Microsoft.AspNetCore.Components.Route("api/[controller]")] //[controller] -> inseamna numele controllerului
     [ApiController]
-    public class OrderProductRelationController: ControllerBase
+    public class OrderProductRelationController : ControllerBase
     {
         private readonly IOrderProductRelationService _orderProductRelationService;
         private readonly ElectronicsStoreContext _context;
 
-        public OrderProductRelationController(IOrderProductRelationService orderProductRelationService, ElectronicsStoreContext context)
+        public OrderProductRelationController(IOrderProductRelationService orderProductRelationService,
+            ElectronicsStoreContext context)
         {
             _orderProductRelationService = orderProductRelationService;
             _context = context;
         }
-        
-        
+
+
         //POST
         [HttpPost("create")]
         public IActionResult Create([FromBody] OrderProductRelationRegisterDTO orderProductRelation)
@@ -27,5 +28,4 @@ namespace Electronics_store.Controllers
             return Ok();
         }
     }
-    
 }

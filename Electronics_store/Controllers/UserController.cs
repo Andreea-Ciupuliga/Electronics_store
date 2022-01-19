@@ -35,27 +35,27 @@ namespace Electronics_store.Controllers
             return Ok(response);
         }
 
-        //[AuthorizationAttribute(Role.Admin)]
+        [AuthorizationAttribute(Role.Admin)]
         [HttpGet("byId/{id}")]
         public IActionResult GetByIdWithDto(Guid Id)
         {
             return Ok(_userService.GetUserByUserId(Id));
         }
 
-        //[AuthorizationAttribute(Role.Admin)]
+        [AuthorizationAttribute(Role.Admin)]
         [HttpGet("allUsers")]
         public IActionResult GetAllUsers()
         {
             return Ok(_userService.GetAllUsers());
         }
-        
-        [HttpGet("GetAllOrdersForAUser")]
-        public IActionResult GetAllOrdersForAUser()
-        {
-            return Ok(_userService.GetAllOrdersForAUser());
-        }
 
-        //[AuthorizationAttribute(Role.Admin)]
+        // [HttpGet("GetAllOrdersForAUser")]
+        // public IActionResult GetAllOrdersForAUser()
+        // {
+        //     return Ok(_userService.GetAllOrdersForAUser());
+        // }
+
+        [AuthorizationAttribute(Role.Admin)]
         [HttpGet("byname")]
         public IActionResult GetAllUsersByName(string name)
         {
@@ -70,7 +70,7 @@ namespace Electronics_store.Controllers
             _userService.CreateUser(user);
             return Ok();
         }
-        
+
         [HttpPost("createAdmin")]
         public IActionResult CreateAdmin([FromBody] UserRegisterDTO user)
         {
@@ -79,7 +79,7 @@ namespace Electronics_store.Controllers
         }
 
         //PUT
-        [AuthorizationAttribute(Role.User,Role.Admin)]
+        [AuthorizationAttribute(Role.User, Role.Admin)]
         [HttpPut("update/{id}")]
         public IActionResult Update([FromBody] UserRegisterDTO user, Guid id)
         {
